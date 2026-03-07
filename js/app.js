@@ -407,6 +407,14 @@ function groupAllClubs(players, searchTerm) {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   }
 
+  // Fjern kønsindikatorer fra klubnavn for at matche kvindehold med herrehold
+  function stripGender(name) {
+    return name
+      .replace(/\s*(femenino|f[eé]minine|femminile|vrouwen|\(women\)|\(kvinder\)|\(damer\)|\(kvindefodbold\))\s*/gi, ' ')
+      .replace(/\s+\b(women|kvinder|damer|dam)\b\s*$/gi, '')
+      .replace(/\s+/g, ' ').trim();
+  }
+
   for (const player of players) {
     // Start med allClubs (kan være tom for preserved spillere)
     const clubs = player.allClubs ? [...player.allClubs] : [];
@@ -450,12 +458,22 @@ function groupAllClubs(players, searchTerm) {
       // Merge-check: find eksisterende pin med samme navn inden for 10 km.
       // Fanger tilfælde som Silkeborg IF der har lidt forskellige koordinater
       // fra DBU-databasen og Wikidata, men er samme klub.
+      // Kvindehold slås også sammen med herrehold inden for 50 km.
       const clubName = (club.klubnavn || '').toLowerCase();
+      const clubStripped = stripGender(clubName);
       let existingKey = null;
       for (const [k, g] of clubMap) {
-        if ((g.locName || '').toLowerCase() === clubName && distKm(g.lat, g.lng, lat, lng) < 10) {
-          existingKey = k;
-          break;
+        const gName = (g.locName || '').toLowerCase();
+        const dist = distKm(g.lat, g.lng, lat, lng);
+        // Exact-name merge within 10 km (e.g. Silkeborg IF with slightly different coords)
+        if (gName === clubName && dist < 10) { existingKey = k; break; }
+        // Gender-stripped merge within 50 km (e.g. Real Madrid Femenino → Real Madrid C.F.)
+        if (dist < 50) {
+          const gStripped = stripGender(gName);
+          if (clubStripped.length >= 5 && gStripped.length >= 5 &&
+              (clubStripped === gStripped || gStripped.includes(clubStripped) || clubStripped.includes(gStripped))) {
+            existingKey = k; break;
+          }
         }
       }
 
