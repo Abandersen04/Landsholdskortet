@@ -455,32 +455,30 @@ function groupAllClubs(players, searchTerm) {
       const lat = typeof club.latitude === 'number' ? club.latitude : parseFloat(club.latitude);
       const lng = typeof club.longitude === 'number' ? club.longitude : parseFloat(club.longitude);
 
-      // Merge-check: find eksisterende pin med samme navn inden for 10 km.
-      // Fanger tilfælde som Silkeborg IF der har lidt forskellige koordinater
-      // fra DBU-databasen og Wikidata, men er samme klub.
-      // Kvindehold slås også sammen med herrehold inden for 50 km.
-      const clubName = (club.klubnavn || '').toLowerCase();
-      const clubStripped = stripGender(clubName);
+      // Merge-check: find eksisterende pin med samme (gender-strippede) navn inden for 10 km,
+      // eller et pin hvis stripped navn er indeholdt i det andet inden for 50 km.
+      // Fanger: Silkeborg IF med lidt forskellige koordinater, og kvindehold under herrehold.
+      // locName bruger altid det gender-strippede navn, så "(kvinder)"/"(women)" aldrig vises.
+      const clubName = stripGender((club.klubnavn || '').toLowerCase());
       let existingKey = null;
       for (const [k, g] of clubMap) {
         const gName = (g.locName || '').toLowerCase();
         const dist = distKm(g.lat, g.lng, lat, lng);
-        // Exact-name merge within 10 km (e.g. Silkeborg IF with slightly different coords)
+        // Exact-name merge within 10 km
         if (gName === clubName && dist < 10) { existingKey = k; break; }
-        // Gender-stripped merge within 50 km (e.g. Real Madrid Femenino → Real Madrid C.F.)
-        if (dist < 50) {
-          const gStripped = stripGender(gName);
-          if (clubStripped.length >= 5 && gStripped.length >= 5 &&
-              (clubStripped === gStripped || gStripped.includes(clubStripped) || clubStripped.includes(gStripped))) {
-            existingKey = k; break;
-          }
+        // Partial-name merge within 50 km (fx "real madrid" ⊂ "real madrid c.f.")
+        if (dist < 50 && clubName.length >= 5 && gName.length >= 5 &&
+            (gName.includes(clubName) || clubName.includes(gName))) {
+          existingKey = k; break;
         }
       }
 
+      // Display-navn: originalt klubnavn men uden gender-suffiks
+      const displayName = stripGender(club.klubnavn || '');
       const key = existingKey ?? clubKey(club);
       if (!clubMap.has(key)) {
         clubMap.set(key, {
-          locName: club.klubnavn,
+          locName: displayName,
           lat,
           lng,
           klub_logo: club.klub_logo,
