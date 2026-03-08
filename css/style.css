@@ -901,3 +901,44 @@ html, body {
 .missing-ret-link:hover {
   color: var(--red) !important;
 }
+
+/* ===== Choropleth ===== */
+.leaflet-interactive:focus {
+  outline: none;
+}
+
+/* Push Leaflet bottom-right controls above the FAB */
+.leaflet-bottom.leaflet-right {
+  bottom: 60px;
+}
+
+/* ===== Choropleth Legend ===== */
+.choropleth-legend {
+  background: white;
+  border-radius: 6px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  min-width: 160px;
+}
+
+.legend-title {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.legend-bar {
+  height: 12px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #f0f0f0, #e87080, #C8102E);
+  margin-bottom: 4px;
+}
+
+.legend-labels {
+  display: flex;
+  justify-content: space-between;
+  color: #666;
+  font-size: 11px;
+}

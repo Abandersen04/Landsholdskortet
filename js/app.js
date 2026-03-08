@@ -2,6 +2,10 @@
 let allPlayers = [];
 let map;
 let markersLayer;
+let geoLayer = null;       // Choropleth GeoJSON layer
+let legendControl = null;  // Leaflet legend control
+let kommunerGeo = null;    // Raw GeoJSON for kommuner
+let regionerGeo = null;    // Raw GeoJSON for regioner
 let debounceTimer;
 
 // ===== Init =====
@@ -40,7 +44,7 @@ function initSidebar() {
   const toggle = document.getElementById('sidebar-toggle');
   const close = document.getElementById('sidebar-close');
 
-  toggle.addEventListener('click', () => sidebar.classList.add('open'));
+  toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
   close.addEventListener('click', () => sidebar.classList.remove('open'));
 
   // Close sidebar when clicking on map (mobile)
@@ -78,10 +82,35 @@ function initControls() {
   // Radio buttons – mapType
   document.querySelectorAll('input[name="map_type"]').forEach(el => {
     el.addEventListener('change', () => {
+      updateBirthSubControls();
       updateClubPlayersVisibility();
       updateMap();
     });
   });
+
+  // Radio buttons – birth_level (by / kommune / region)
+  document.querySelectorAll('input[name="birth_level"]').forEach(el => {
+    el.addEventListener('change', () => {
+      updateBirthSubControls();
+      updateClubPlayersVisibility();
+      updateMap();
+    });
+  });
+
+  // Checkbox – pr. 1000 indbyggere
+  document.getElementById('per-capita-check').addEventListener('change', () => updateMap());
+
+  function updateBirthSubControls() {
+    const mapType = document.querySelector('input[name="map_type"]:checked').value;
+    const birthLevelGroup = document.getElementById('birth-level-group');
+    const perCapitaGroup = document.getElementById('per-capita-group');
+    birthLevelGroup.style.display = (mapType === 'birth') ? '' : 'none';
+    if (mapType === 'birth') {
+      const level = document.querySelector('input[name="birth_level"]:checked').value;
+      perCapitaGroup.style.display = (level === 'kommune' || level === 'region') ? '' : 'none';
+    }
+  }
+  updateBirthSubControls();
 
   document.querySelectorAll('input[name="gender"]').forEach(el => {
     el.addEventListener('change', () => updateMap());
@@ -92,7 +121,11 @@ function initControls() {
     const mapType = document.querySelector('input[name="map_type"]:checked').value;
     const group = document.getElementById('club-players-group');
     const groupLabel = document.getElementById('club-players-group-label');
-    group.style.display = (mapType === 'club' || mapType === 'birth' || mapType === 'all_clubs') ? '' : 'none';
+    const birthLevel = document.querySelector('input[name="birth_level"]:checked').value;
+    // Skjul min-spillere ved region/kommune-niveau (giver ikke mening pr. 1000)
+    const showMinPlayers = mapType === 'club' || mapType === 'all_clubs' ||
+      (mapType === 'birth' && birthLevel === 'city');
+    group.style.display = showMinPlayers ? '' : 'none';
     if (mapType === 'birth') {
       groupLabel.childNodes[0].textContent = 'Min. spillere pr. fødested: ';
     } else {
@@ -207,8 +240,14 @@ function debouncedUpdate() {
 
 // ===== Load Data =====
 async function loadData() {
-  const resp = await fetch('data/players.json');
-  const data = await resp.json();
+  const [playersResp, kommunerResp, regionerResp] = await Promise.all([
+    fetch('data/players.json'),
+    fetch('data/kommuner.geojson'),
+    fetch('data/regioner.geojson')
+  ]);
+  const data = await playersResp.json();
+  kommunerGeo = await kommunerResp.json();
+  regionerGeo = await regionerResp.json();
 
   allPlayers = data.map(p => ({
     ...p,
@@ -266,9 +305,14 @@ function getFilteredPlayers() {
     if (gender !== 'alle' && p.gender !== gender) return false;
 
     if (mapType === 'birth') {
-      if (!p.lat || !p.lon || !p.birthPlaceLabel) return false;
-    } else if (mapType === 'region') {
-      if (!p.region || !p.lat || !p.lon) return false;
+      const birthLevel = document.querySelector('input[name="birth_level"]:checked').value;
+      if (birthLevel === 'city') {
+        if (!p.lat || !p.lon || !p.birthPlaceLabel) return false;
+      } else if (birthLevel === 'kommune') {
+        if (!p.lat || !p.lon || !p.region) return false;
+      } else if (birthLevel === 'region') {
+        if (!p.region) return false;
+      }
     } else if (mapType === 'all_clubs') {
       const hasAllClubs = p.allClubs && p.allClubs.length > 0;
       const hasFirstClub = p.latitude && p.longitude && p.klubnavn;
@@ -278,11 +322,16 @@ function getFilteredPlayers() {
     }
 
     if (searchTerm) {
-      // Søg i: spillernavn + stripped første klub + stripped allClubs (alle modes)
       const nameHay = (p.playerLabel || '').toLowerCase();
       const firstClub = stripGender(p.klubnavn || '').toLowerCase();
-      const allClubHay = (p.allClubs || []).map(c => stripGender(c.klubnavn || '').toLowerCase()).join(' ');
-      if (!matchesSearch(searchTerm, [nameHay, firstClub, allClubHay])) return false;
+      if (mapType === 'all_clubs') {
+        // Alle klubber: søg i alle klubber spilleren har spillet for
+        const allClubHay = (p.allClubs || []).map(c => stripGender(c.klubnavn || '').toLowerCase()).join(' ');
+        if (!matchesSearch(searchTerm, [nameHay, firstClub, allClubHay])) return false;
+      } else {
+        // Første klub / Fødested / Region: søg kun i spillernavn + første klub
+        if (!matchesSearch(searchTerm, [nameHay, firstClub])) return false;
+      }
     }
 
     return true;
@@ -296,45 +345,58 @@ function updateMap() {
 
   // Group by location
   let groups;
+  const birthLevel = mapType === 'birth'
+    ? document.querySelector('input[name="birth_level"]:checked').value
+    : null;
+  const perCapita = mapType === 'birth' && (birthLevel === 'kommune' || birthLevel === 'region')
+    && document.getElementById('per-capita-check').checked;
+
   if (mapType === 'all_clubs') {
     const searchTerm = document.getElementById('search').value.trim().toLowerCase();
     groups = groupAllClubs(players, searchTerm);
   } else {
-    groups = groupPlayers(players, mapType);
+    groups = groupPlayers(players, mapType, birthLevel);
   }
 
-  // Filtrer på minimum spillere per sted (klub- og fødested-visning)
-  if (mapType === 'club' || mapType === 'birth') {
+  const pinLabelEl = document.getElementById('count-label');
+
+  if (mapType === 'club') {
     const minCP = parseInt(document.getElementById('min-club-players').value, 10);
-    if (minCP > 1) {
-      groups = groups.filter(g => g.players.length >= minCP);
+    if (minCP > 1) groups = groups.filter(g => g.players.length >= minCP);
+    pinLabelEl.textContent = 'klubber vist';
+  } else if (mapType === 'birth') {
+    if (birthLevel === 'city') {
+      const minCP = parseInt(document.getElementById('min-club-players').value, 10);
+      if (minCP > 1) groups = groups.filter(g => g.players.length >= minCP);
     }
-    const qualifyingCount = groups.reduce((sum, g) => sum + g.players.length, 0);
-    document.getElementById('player-count').textContent = qualifyingCount;
+    pinLabelEl.textContent = birthLevel === 'city' ? 'steder vist' : birthLevel === 'kommune' ? 'kommuner vist' : 'regioner vist';
   } else if (mapType === 'all_clubs') {
     const minCP = parseInt(document.getElementById('min-club-players').value, 10);
-    if (minCP > 1) {
-      groups = groups.filter(g => g.players.length >= minCP);
-    }
-    // Tæl unikke spillere (en spiller kan have pins ved flere klubber)
-    const uniquePlayers = new Set(groups.flatMap(g => g.players.map(p => p.dbuID)));
-    document.getElementById('player-count').textContent = uniquePlayers.size;
-  } else {
-    document.getElementById('player-count').textContent = players.length;
+    if (minCP > 1) groups = groups.filter(g => g.players.length >= minCP);
+    pinLabelEl.textContent = 'klubber vist';
   }
 
-  // Beregn total for procentvisning (region-mode)
-  if (mapType === 'region') {
-    const total = groups.reduce((s, g) => s + g.players.length, 0);
-    groups.forEach(g => { g.totalPlayers = total; });
+  document.getElementById('player-count').textContent = players.length;
+  document.getElementById('pin-count').textContent = groups.length;
+
+  // Choropleth-mode: brug GeoJSON-lag i stedet for pins
+  if (mapType === 'birth' && (birthLevel === 'kommune' || birthLevel === 'region')) {
+    markersLayer.clearLayers();
+    const geoData = birthLevel === 'kommune' ? kommunerGeo : regionerGeo;
+    buildChoropleth(groups, geoData, 'navn', perCapita);
+    return;
   }
+
+  // Fjern evt. gammelt choropleth-lag og legend
+  if (geoLayer) { map.removeLayer(geoLayer); geoLayer = null; }
+  if (legendControl) { map.removeControl(legendControl); legendControl = null; }
 
   // Clear and rebuild markers
   markersLayer.clearLayers();
 
   const bounds = [];
   groups.forEach(group => {
-    const marker = createMarker(group, mapType);
+    const marker = createMarker(group, mapType, birthLevel, perCapita);
     if (marker) {
       markersLayer.addLayer(marker);
       bounds.push([group.lat, group.lng]);
@@ -352,6 +414,92 @@ function updateMap() {
   }
 }
 
+// ===== Choropleth =====
+function choroplethColor(value, maxValue) {
+  // Interpoler fra hvid til dansk rød (#C8102E) via lys rød
+  if (!value || maxValue === 0) return '#f0f0f0';
+  const t = Math.min(value / maxValue, 1);
+  // Gamma-korriger for at gøre farveforskelle mere synlige ved lave værdier
+  const tg = Math.pow(t, 0.45);
+  const r = Math.round(200 + (255 - 200) * (1 - tg));   // 255→200
+  const g = Math.round(16  + (240 - 16)  * (1 - tg));   // 240→16
+  const b = Math.round(46  + (240 - 46)  * (1 - tg));   // 240→46
+  return `rgb(${r},${g},${b})`;
+}
+
+function buildChoropleth(groups, geoData, nameKey, perCapita) {
+  // Byg opslag: navn → gruppe
+  const groupByName = new Map(groups.map(g => [g.locName, g]));
+  const maxValue = groups.reduce((m, g) => {
+    const v = perCapita && g.befolkning ? g.players.length / g.befolkning * 1000 : g.players.length;
+    return Math.max(m, v);
+  }, 0);
+
+  if (geoLayer) { map.removeLayer(geoLayer); geoLayer = null; }
+  if (legendControl) { map.removeControl(legendControl); legendControl = null; }
+
+  // Farveforklaring
+  legendControl = L.control({ position: 'bottomright' });
+  legendControl.onAdd = () => {
+    const steps = 5;
+    const labels = Array.from({ length: steps }, (_, i) => {
+      const v = (maxValue * (i + 1) / steps);
+      return perCapita ? v.toFixed(2) : Math.round(v);
+    });
+    const div = L.DomUtil.create('div', 'choropleth-legend');
+    div.innerHTML = `
+      <div class="legend-title">${perCapita ? 'Pr. 1.000 indb.' : 'Spillere'}</div>
+      <div class="legend-bar"></div>
+      <div class="legend-labels">
+        <span>0</span>
+        ${labels.map(l => `<span>${l}</span>`).join('')}
+      </div>`;
+    return div;
+  };
+  legendControl.addTo(map);
+
+  geoLayer = L.geoJSON(geoData, {
+    style: feature => {
+      const name = feature.properties[nameKey];
+      const group = groupByName.get(name);
+      const value = group
+        ? (perCapita && group.befolkning ? group.players.length / group.befolkning * 1000 : group.players.length)
+        : 0;
+      return {
+        fillColor: choroplethColor(value, maxValue),
+        fillOpacity: group ? 0.75 : 0.15,
+        color: 'white',
+        weight: 1.5,
+        opacity: 0.8
+      };
+    },
+    onEachFeature: (feature, layer) => {
+      const name = feature.properties[nameKey];
+      const group = groupByName.get(name);
+      if (!group) {
+        layer.bindTooltip(`${name}: ingen spillere`, { direction: 'auto', sticky: true });
+        return;
+      }
+      const value = perCapita && group.befolkning
+        ? (group.players.length / group.befolkning * 1000).toFixed(2)
+        : group.players.length;
+      const label = perCapita ? `${value} pr. 1.000 indb.` : `${value} spillere`;
+      layer.bindTooltip(`<strong>${name}</strong><br>${label}`, {
+        direction: 'auto',
+        sticky: true,
+        className: 'leaflet-tooltip'
+      });
+      layer.bindPopup(() => buildPopupHtml(group, 'birth'), {
+        maxWidth: 340,
+        minWidth: 260,
+        closeButton: true
+      });
+      layer.on('mouseover', () => layer.setStyle({ weight: 3, color: '#333' }));
+      layer.on('mouseout', () => geoLayer.resetStyle(layer));
+    }
+  }).addTo(map);
+}
+
 const REGION_CENTERS = {
   'Region Nordjylland':  [57.05, 9.93],
   'Region Midtjylland':  [56.25, 9.50],
@@ -360,18 +508,196 @@ const REGION_CENTERS = {
   'Region Hovedstaden':  [55.77, 12.55]
 };
 
-function groupPlayers(players, mapType) {
+// Befolkningstal fra Wikipedia (2025) + geografiske centre for alle 98 kommuner
+const KOMMUNE_DATA = {
+  "København":          { region: "Region Hovedstaden",  befolkning: 667099, lat: 55.6761, lon: 12.5683 },
+  "Aarhus":             { region: "Region Midtjylland",  befolkning: 373388, lat: 56.1629, lon: 10.2039 },
+  "Aalborg":            { region: "Region Nordjylland",  befolkning: 224612, lat: 57.0488, lon: 9.9217  },
+  "Odense":             { region: "Region Syddanmark",   befolkning: 210803, lat: 55.4038, lon: 10.4024 },
+  "Vejle":              { region: "Region Syddanmark",   befolkning: 122433, lat: 55.7113, lon: 9.5360  },
+  "Esbjerg":            { region: "Region Syddanmark",   befolkning: 115157, lat: 55.4769, lon: 8.4592  },
+  "Frederiksberg":      { region: "Region Hovedstaden",  befolkning: 105840, lat: 55.6797, lon: 12.5273 },
+  "Randers":            { region: "Region Midtjylland",  befolkning: 100356, lat: 56.4608, lon: 10.0368 },
+  "Silkeborg":          { region: "Region Midtjylland",  befolkning: 101574, lat: 56.1893, lon: 9.5491  },
+  "Viborg":             { region: "Region Midtjylland",  befolkning:  97621, lat: 56.4533, lon: 9.3999  },
+  "Horsens":            { region: "Region Midtjylland",  befolkning:  97921, lat: 55.8607, lon: 9.8502  },
+  "Kolding":            { region: "Region Syddanmark",   befolkning:  95897, lat: 55.4904, lon: 9.4722  },
+  "Roskilde":           { region: "Region Sjælland",     befolkning:  91623, lat: 55.6415, lon: 12.0803 },
+  "Herning":            { region: "Region Midtjylland",  befolkning:  90006, lat: 56.1339, lon: 8.9726  },
+  "Næstved":            { region: "Region Sjælland",     befolkning:  84895, lat: 55.2292, lon: 11.7604 },
+  "Slagelse":           { region: "Region Sjælland",     befolkning:  80481, lat: 55.4023, lon: 11.3547 },
+  "Gentofte":           { region: "Region Hovedstaden",  befolkning:  75076, lat: 55.7480, lon: 12.5392 },
+  "Sønderborg":         { region: "Region Syddanmark",   befolkning:  74096, lat: 54.9095, lon: 9.7925  },
+  "Holbæk":             { region: "Region Sjælland",     befolkning:  74490, lat: 55.7161, lon: 11.7134 },
+  "Gladsaxe":           { region: "Region Hovedstaden",  befolkning:  70958, lat: 55.7323, lon: 12.4920 },
+  "Skanderborg":        { region: "Region Midtjylland",  befolkning:  65760, lat: 56.0405, lon: 9.9278  },
+  "Hjørring":           { region: "Region Nordjylland",  befolkning:  63311, lat: 57.4634, lon: 9.9819  },
+  "Helsingør":          { region: "Region Hovedstaden",  befolkning:  64953, lat: 56.0362, lon: 12.6136 },
+  "Køge":               { region: "Region Sjælland",     befolkning:  63335, lat: 55.4573, lon: 12.1806 },
+  "Guldborgsund":       { region: "Region Sjælland",     befolkning:  59350, lat: 54.7716, lon: 11.8751 },
+  "Svendborg":          { region: "Region Syddanmark",   befolkning:  60001, lat: 55.0607, lon: 10.6083 },
+  "Aabenraa":           { region: "Region Syddanmark",   befolkning:  58621, lat: 55.0439, lon: 9.4181  },
+  "Holstebro":          { region: "Region Midtjylland",  befolkning:  59201, lat: 56.3594, lon: 8.6166  },
+  "Frederikshavn":      { region: "Region Nordjylland",  befolkning:  57882, lat: 57.4395, lon: 10.5360 },
+  "Lyngby-Taarbæk":    { region: "Region Hovedstaden",  befolkning:  58713, lat: 55.7719, lon: 12.5038 },
+  "Rudersdal":          { region: "Region Hovedstaden",  befolkning:  57342, lat: 55.8311, lon: 12.4978 },
+  "Ringkøbing-Skjern":  { region: "Region Midtjylland",  befolkning:  55582, lat: 56.0877, lon: 8.2431  },
+  "Haderslev":          { region: "Region Syddanmark",   befolkning:  55354, lat: 55.2525, lon: 9.4896  },
+  "Høje-Taastrup":      { region: "Region Hovedstaden",  befolkning:  59059, lat: 55.6672, lon: 12.2736 },
+  "Hillerød":           { region: "Region Hovedstaden",  befolkning:  54855, lat: 55.9307, lon: 12.3086 },
+  "Hvidovre":           { region: "Region Hovedstaden",  befolkning:  53760, lat: 55.6476, lon: 12.4753 },
+  "Faaborg-Midtfyn":   { region: "Region Syddanmark",   befolkning:  52284, lat: 55.0967, lon: 10.2417 },
+  "Fredericia":         { region: "Region Syddanmark",   befolkning:  52616, lat: 55.5661, lon: 9.7530  },
+  "Greve":              { region: "Region Sjælland",     befolkning:  53536, lat: 55.5896, lon: 12.2973 },
+  "Ballerup":           { region: "Region Hovedstaden",  befolkning:  52939, lat: 55.7299, lon: 12.3626 },
+  "Varde":              { region: "Region Syddanmark",   befolkning:  49410, lat: 55.6231, lon: 8.4803  },
+  "Favrskov":           { region: "Region Midtjylland",  befolkning:  49359, lat: 56.3932, lon: 9.9461  },
+  "Kalundborg":         { region: "Region Sjælland",     befolkning:  48103, lat: 55.6768, lon: 11.0896 },
+  "Hedensted":          { region: "Region Midtjylland",  befolkning:  48167, lat: 55.7722, lon: 9.7033  },
+  "Frederikssund":      { region: "Region Hovedstaden",  befolkning:  47052, lat: 55.8393, lon: 12.0657 },
+  "Vordingborg":        { region: "Region Sjælland",     befolkning:  45057, lat: 55.0062, lon: 11.9067 },
+  "Egedal":             { region: "Region Hovedstaden",  befolkning:  45563, lat: 55.7839, lon: 12.1958 },
+  "Skive":              { region: "Region Midtjylland",  befolkning:  44328, lat: 56.5633, lon: 9.0253  },
+  "Syddjurs":           { region: "Region Midtjylland",  befolkning:  44101, lat: 56.2617, lon: 10.6069 },
+  "Thisted":            { region: "Region Nordjylland",  befolkning:  42698, lat: 56.9571, lon: 8.6926  },
+  "Tårnby":             { region: "Region Hovedstaden",  befolkning:  44034, lat: 55.6253, lon: 12.5988 },
+  "Vejen":              { region: "Region Syddanmark",   befolkning:  42702, lat: 55.4844, lon: 9.1430  },
+  "Rødovre":            { region: "Region Hovedstaden",  befolkning:  44734, lat: 55.6820, lon: 12.4531 },
+  "Ikast-Brande":       { region: "Region Midtjylland",  befolkning:  43009, lat: 56.1345, lon: 9.1558  },
+  "Furesø":             { region: "Region Hovedstaden",  befolkning:  42540, lat: 55.8002, lon: 12.3659 },
+  "Mariagerfjord":      { region: "Region Nordjylland",  befolkning:  41606, lat: 56.6509, lon: 9.9811  },
+  "Fredensborg":        { region: "Region Hovedstaden",  befolkning:  42186, lat: 55.9718, lon: 12.4006 },
+  "Gribskov":           { region: "Region Hovedstaden",  befolkning:  41797, lat: 56.0654, lon: 12.3060 },
+  "Assens":             { region: "Region Syddanmark",   befolkning:  40469, lat: 55.2693, lon: 9.8993  },
+  "Middelfart":         { region: "Region Syddanmark",   befolkning:  40318, lat: 55.5031, lon: 9.7374  },
+  "Lolland":            { region: "Region Sjælland",     befolkning:  39122, lat: 54.7650, lon: 11.4930 },
+  "Bornholm":           { region: "Region Hovedstaden",  befolkning:  38966, lat: 55.1000, lon: 14.9000 },
+  "Jammerbugt":         { region: "Region Nordjylland",  befolkning:  37954, lat: 57.1559, lon: 9.5789  },
+  "Faxe":               { region: "Region Sjælland",     befolkning:  37802, lat: 55.2565, lon: 12.1285 },
+  "Brøndby":            { region: "Region Hovedstaden",  befolkning:  40401, lat: 55.6428, lon: 12.4329 },
+  "Norddjurs":          { region: "Region Midtjylland",  befolkning:  36658, lat: 56.4917, lon: 10.6500 },
+  "Tønder":             { region: "Region Syddanmark",   befolkning:  36399, lat: 54.9333, lon: 8.8667  },
+  "Brønderslev":        { region: "Region Nordjylland",  befolkning:  36706, lat: 57.2698, lon: 9.9437  },
+  "Vesthimmerland":     { region: "Region Nordjylland",  befolkning:  35818, lat: 56.7667, lon: 9.5167  },
+  "Ringsted":           { region: "Region Sjælland",     befolkning:  36286, lat: 55.4440, lon: 11.7893 },
+  "Odsherred":          { region: "Region Sjælland",     befolkning:  32225, lat: 55.8976, lon: 11.5870 },
+  "Nyborg":             { region: "Region Syddanmark",   befolkning:  32329, lat: 55.3127, lon: 10.7891 },
+  "Halsnæs":            { region: "Region Hovedstaden",  befolkning:  31633, lat: 55.9677, lon: 12.0009 },
+  "Rebild":             { region: "Region Nordjylland",  befolkning:  30942, lat: 56.8299, lon: 9.9400  },
+  "Sorø":               { region: "Region Sjælland",     befolkning:  30641, lat: 55.4303, lon: 11.5560 },
+  "Nordfyn":            { region: "Region Syddanmark",   befolkning:  29342, lat: 55.4778, lon: 10.1557 },
+  "Herlev":             { region: "Region Hovedstaden",  befolkning:  30784, lat: 55.7265, lon: 12.4393 },
+  "Lejre":              { region: "Region Sjælland",     befolkning:  29594, lat: 55.6030, lon: 11.9740 },
+  "Albertslund":        { region: "Region Hovedstaden",  befolkning:  28117, lat: 55.6602, lon: 12.3634 },
+  "Billund":            { region: "Region Syddanmark",   befolkning:  27168, lat: 55.7296, lon: 9.0793  },
+  "Allerød":            { region: "Region Hovedstaden",  befolkning:  26128, lat: 55.8723, lon: 12.3598 },
+  "Hørsholm":           { region: "Region Hovedstaden",  befolkning:  25168, lat: 55.8822, lon: 12.4987 },
+  "Solrød":             { region: "Region Sjælland",     befolkning:  24732, lat: 55.5407, lon: 12.2217 },
+  "Kerteminde":         { region: "Region Syddanmark",   befolkning:  23949, lat: 55.4479, lon: 10.6597 },
+  "Stevns":             { region: "Region Sjælland",     befolkning:  23612, lat: 55.3147, lon: 12.2467 },
+  "Glostrup":           { region: "Region Hovedstaden",  befolkning:  24869, lat: 55.6658, lon: 12.3980 },
+  "Odder":              { region: "Region Midtjylland",  befolkning:  24083, lat: 55.9762, lon: 10.1635 },
+  "Ishøj":              { region: "Region Hovedstaden",  befolkning:  24365, lat: 55.6154, lon: 12.3508 },
+  "Struer":             { region: "Region Midtjylland",  befolkning:  20229, lat: 56.4893, lon: 8.5789  },
+  "Morsø":              { region: "Region Nordjylland",  befolkning:  19520, lat: 56.8333, lon: 8.7500  },
+  "Lemvig":             { region: "Region Midtjylland",  befolkning:  18800, lat: 56.5500, lon: 8.3000  },
+  "Vallensbæk":         { region: "Region Hovedstaden",  befolkning:  18322, lat: 55.6357, lon: 12.3764 },
+  "Dragør":             { region: "Region Hovedstaden",  befolkning:  14450, lat: 55.5937, lon: 12.6683 },
+  "Langeland":          { region: "Region Syddanmark",   befolkning:  11973, lat: 54.9500, lon: 10.8333 },
+  "Ærø":                { region: "Region Syddanmark",   befolkning:   5881, lat: 54.8833, lon: 10.4167 },
+  "Samsø":              { region: "Region Midtjylland",  befolkning:   3656, lat: 55.8667, lon: 10.6167 },
+  "Fanø":               { region: "Region Syddanmark",   befolkning:   3270, lat: 55.4167, lon: 8.4000  },
+  "Læsø":               { region: "Region Nordjylland",  befolkning:   1719, lat: 57.2667, lon: 11.0833 }
+};
+
+// Beregn region-befolkning som sum af kommuner
+const REGION_BEFOLKNING = {};
+Object.values(KOMMUNE_DATA).forEach(({ region, befolkning }) => {
+  REGION_BEFOLKNING[region] = (REGION_BEFOLKNING[region] || 0) + befolkning;
+});
+
+// Point-in-polygon (ray casting) – virker for GeoJSON Polygon/MultiPolygon
+function pointInRing(px, py, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i][0], yi = ring[i][1];
+    const xj = ring[j][0], yj = ring[j][1];
+    if (((yi > py) !== (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+function pointInFeature(lon, lat, feature) {
+  const geom = feature.geometry;
+  if (!geom) return false;
+  const polys = geom.type === 'MultiPolygon' ? geom.coordinates : [geom.coordinates];
+  for (const poly of polys) {
+    if (pointInRing(lon, lat, poly[0])) return true;
+  }
+  return false;
+}
+
+// Knyt fødested til kommune via punkt-i-polygon på indlæst GeoJSON
+// Fallback til nærmeste centrum hvis koordinat ikke falder i nogen polygon
+function polygonArea(ring) {
+  // Shoelace formula — approximate area (not geo-corrected, but fine for comparison)
+  let area = 0;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    area += (ring[j][0] + ring[i][0]) * (ring[j][1] - ring[i][1]);
+  }
+  return Math.abs(area / 2);
+}
+
+function featureArea(feature) {
+  const geom = feature.geometry;
+  if (!geom) return Infinity;
+  const polys = geom.type === 'MultiPolygon' ? geom.coordinates : [geom.coordinates];
+  return polys.reduce((sum, poly) => sum + polygonArea(poly[0]), 0);
+}
+
+function findNearestKommune(lat, lon) {
+  if (!lat || !lon) return null;
+  // 1) Point-in-polygon — pick smallest matching polygon (handles enclaves like Frederiksberg ⊂ København)
+  if (kommunerGeo) {
+    let bestFeature = null, bestArea = Infinity;
+    for (const feature of kommunerGeo.features) {
+      if (pointInFeature(lon, lat, feature)) {
+        const area = featureArea(feature);
+        if (area < bestArea) { bestArea = area; bestFeature = feature; }
+      }
+    }
+    if (bestFeature) return bestFeature.properties.navn;
+  }
+  // 2) Fallback: nærmeste centrum
+  let best = null, bestDist = Infinity;
+  for (const [name, k] of Object.entries(KOMMUNE_DATA)) {
+    const d = (lat - k.lat) ** 2 + (lon - k.lon) ** 2;
+    if (d < bestDist) { bestDist = d; best = name; }
+  }
+  return best;
+}
+
+function groupPlayers(players, mapType, birthLevel) {
   const map = new Map();
 
   players.forEach(p => {
     let key, lat, lng, locName;
 
-    if (mapType === 'birth') {
+    if (mapType === 'birth' && birthLevel === 'city') {
       key = p.birthPlaceLabel;
       lat = p.lat;
       lng = p.lon;
       locName = p.birthPlaceLabel;
-    } else if (mapType === 'region') {
+    } else if (mapType === 'birth' && birthLevel === 'kommune') {
+      const k = findNearestKommune(p.lat, p.lon);
+      if (!k || !KOMMUNE_DATA[k]) return;
+      key = k;
+      lat = KOMMUNE_DATA[k].lat;
+      lng = KOMMUNE_DATA[k].lon;
+      locName = k;
+    } else if (mapType === 'birth' && birthLevel === 'region') {
       key = p.region;
       const center = REGION_CENTERS[p.region];
       lat = center ? center[0] : null;
@@ -386,7 +712,7 @@ function groupPlayers(players, mapType) {
     }
 
     if (!map.has(key)) {
-      map.set(key, {
+      const entry = {
         locName,
         lat,
         lng,
@@ -395,7 +721,14 @@ function groupPlayers(players, mapType) {
         klub_logo: p.klub_logo,
         klub_website: p.klub_website,
         klub_dbu_url: p.klub_dbu_url
-      });
+      };
+      // Attach befolkning for kommune/region modes
+      if (mapType === 'birth' && birthLevel === 'kommune' && KOMMUNE_DATA[key]) {
+        entry.befolkning = KOMMUNE_DATA[key].befolkning;
+      } else if (mapType === 'birth' && birthLevel === 'region' && REGION_BEFOLKNING[key]) {
+        entry.befolkning = REGION_BEFOLKNING[key];
+      }
+      map.set(key, entry);
     }
     map.get(key).players.push(p);
   });
@@ -431,17 +764,23 @@ function groupAllClubs(players, searchTerm) {
     // Start med allClubs (kan være tom for preserved spillere)
     const clubs = player.allClubs ? [...player.allClubs] : [];
 
-    // Første klub garanteres altid med – også hvis allClubs mangler den.
-    // Tjek på navn (case-insensitiv) for at undgå dubletter når allClubs allerede
-    // har samme klub under et andet nøgle-skema (fx QID vs. klub_id).
+    // Første klub garanteres ALTID med — top-level koordinater bruges som fallback
+    // selv hvis allClubs allerede har samme klub (men uden koordinater).
+    // En allClubs-entry tæller kun som "allerede der" hvis den har gyldige koordinater —
+    // ellers bruger vi de korrekte top-level koordinater i stedet.
     if (player.latitude && player.longitude && player.klubnavn) {
       const firstName = (player.klubnavn || '').toLowerCase();
       const firstKey  = clubKey(player);
-      const alreadyIn = clubs.some(c =>
-        clubKey(c) === firstKey ||
-        (c.klubnavn || '').toLowerCase() === firstName
+      const alreadyInWithCoords = clubs.some(c =>
+        (clubKey(c) === firstKey || (c.klubnavn || '').toLowerCase() === firstName)
+        && c.latitude != null && c.longitude != null
       );
-      if (!alreadyIn) {
+      if (!alreadyInWithCoords) {
+        // Fjern evt. koordinatløs entry med samme navn (erstattes af top-level entry)
+        const dupIdx = clubs.findIndex(c =>
+          clubKey(c) === firstKey || (c.klubnavn || '').toLowerCase() === firstName
+        );
+        if (dupIdx !== -1) clubs.splice(dupIdx, 1);
         clubs.push({
           klub_id: player.klub_id,
           klubnavn: player.klubnavn,
@@ -466,8 +805,14 @@ function groupAllClubs(players, searchTerm) {
     for (const club of visibleClubs) {
       if (!club.latitude || !club.longitude) continue;
 
-      const lat = typeof club.latitude === 'number' ? club.latitude : parseFloat(club.latitude);
-      const lng = typeof club.longitude === 'number' ? club.longitude : parseFloat(club.longitude);
+      // For is_earliest-klubber: brug top-level koordinater (fra DBU-geocoded, step 05)
+      // så pinnen sidder det SAMME sted som i "Første klub"-mode.
+      // Undgår at Wikidata-koordinater (allClubs) afviger fra DBU-koordinater (top-level).
+      const rawLat = (club.is_earliest && player.latitude) ? player.latitude : club.latitude;
+      const rawLng = (club.is_earliest && player.longitude) ? player.longitude : club.longitude;
+
+      const lat = typeof rawLat === 'number' ? rawLat : parseFloat(rawLat);
+      const lng = typeof rawLng === 'number' ? rawLng : parseFloat(rawLng);
 
       // Merge-check: find eksisterende pin med samme (gender-strippede) navn inden for 10 km,
       // eller et pin hvis stripped navn er indeholdt i det andet inden for 50 km.
@@ -487,7 +832,10 @@ function groupAllClubs(players, searchTerm) {
           if (gName.includes(clubName) || clubName.includes(gName)) { existingKey = k; break; }
           const wordsA = clubName.split(/\s+/).filter(w => w.length >= 4);
           const wordsB = gName.split(/\s+/).filter(w => w.length >= 4);
-          if (wordsA.length > 0 && wordsB.length > 0 &&
+          // Kræv mindst 2 signifikante ord på BEGGE sider for at undgå
+          // at "Vejle FC" (1 ord) fejlagtigt merger med "Vejle Kammeraterne".
+          // "Inter Milan" (2 ord) ↔ "FC Internazionale Milano" (2 ord) virker stadig.
+          if (wordsA.length >= 2 && wordsB.length >= 2 &&
               wordsA.every(wa => wordsB.some(wb => wb.startsWith(wa) || wa.startsWith(wb)))) {
             existingKey = k; break;
           }
@@ -539,7 +887,7 @@ function groupAllClubs(players, searchTerm) {
 }
 
 // ===== Markers =====
-function createMarker(group, mapType) {
+function createMarker(group, mapType, birthLevel, perCapita) {
   const { lat, lng, locName, players } = group;
   if (!lat || !lng) return null;
 
@@ -576,19 +924,6 @@ function createMarker(group, mapType) {
       };
     } else {
       // Round badge resembling a logo - full name curved inside circle
-      const words = locName.split(/\s+/);
-      let line1, line2;
-      if (words.length > 2) {
-        const mid = Math.ceil(words.length / 2);
-        line1 = escapeHtml(words.slice(0, mid).join(' '));
-        line2 = escapeHtml(words.slice(mid).join(' '));
-      } else if (words.length === 2) {
-        line1 = escapeHtml(words[0]);
-        line2 = escapeHtml(words[1]);
-      } else {
-        line1 = escapeHtml(locName);
-        line2 = '';
-      }
       const fullText = escapeHtml(locName);
       const badgeHtml = buildSvgBadge(fullText);
       const icon = L.divIcon({
@@ -605,28 +940,41 @@ function createMarker(group, mapType) {
       direction: 'auto',
       className: 'leaflet-tooltip'
     });
-  } else if (mapType === 'region') {
-    // Region: stor cirkel med procent og antal
-    const size = 60 + Math.sqrt(players.length) * 2;
-    const regionShort = locName.replace('Region ', '');
+  } else if (mapType === 'birth' && (birthLevel === 'kommune' || birthLevel === 'region')) {
+    // Kommune / Region: cirkel med antal eller pr.-1000-tal
+    const value = perCapita && group.befolkning
+      ? (players.length / group.befolkning * 1000)
+      : players.length;
+    const baseSize = birthLevel === 'region' ? 60 : 44;
+    const size = baseSize + Math.sqrt(value) * (perCapita ? 20 : (birthLevel === 'region' ? 2 : 3));
+    const clampedSize = Math.max(36, Math.min(size, 110));
+    const displayValue = perCapita
+      ? value.toFixed(2)
+      : players.length;
+    const label = perCapita ? `${displayValue}/1k` : `${displayValue} spl.`;
+    const shortName = birthLevel === 'region' ? locName.replace('Region ', '') : locName;
+    const tooltipText = perCapita
+      ? `${locName}: ${displayValue} pr. 1.000 indb. (${players.length} spillere)`
+      : `${locName}: ${players.length} spillere`;
     const pct = group.totalPlayers > 0
       ? Math.round(players.length / group.totalPlayers * 100)
       : 0;
+    const subLabel = perCapita ? `${pct}%` : '';
     const icon = L.divIcon({
       className: '',
-      html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:rgba(200,16,46,0.75);border:3px solid white;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.4);cursor:pointer;">
-               <span style="color:white;font-weight:bold;font-size:${Math.min(16, size/4)}px;line-height:1.1">${pct}%</span>
-               <span style="color:white;font-size:${Math.min(9, size/7)}px;text-align:center;padding:0 3px;line-height:1.2">${players.length} spl.</span>
-               <span style="color:white;font-size:${Math.min(9, size/7)}px;text-align:center;padding:0 3px;line-height:1.2">${escapeHtml(regionShort)}</span>
+      html: `<div style="width:${clampedSize}px;height:${clampedSize}px;border-radius:50%;background:rgba(200,16,46,0.75);border:3px solid white;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.4);cursor:pointer;">
+               ${subLabel ? `<span style="color:white;font-weight:bold;font-size:${Math.min(14, clampedSize/4)}px;line-height:1.1">${subLabel}</span>` : ''}
+               <span style="color:white;font-size:${Math.min(10, clampedSize/5)}px;text-align:center;padding:0 3px;line-height:1.2">${label}</span>
+               <span style="color:white;font-size:${Math.min(9, clampedSize/6)}px;text-align:center;padding:0 3px;line-height:1.2">${escapeHtml(shortName)}</span>
              </div>`,
-      iconSize: [size, size],
-      iconAnchor: [size / 2, size / 2],
-      popupAnchor: [0, -size / 2]
+      iconSize: [clampedSize, clampedSize],
+      iconAnchor: [clampedSize / 2, clampedSize / 2],
+      popupAnchor: [0, -clampedSize / 2]
     });
     marker = L.marker([lat, lng], { icon });
-    marker.bindTooltip(`${locName}: ${pct}% (${players.length} spillere)`, { direction: 'auto' });
+    marker.bindTooltip(tooltipText, { direction: 'auto' });
   } else {
-    // Birth place: circle marker
+    // Birth city: circle marker
     const radius = Math.sqrt(players.length) * 3 + 5;
     marker = L.circleMarker([lat, lng], {
       radius,
@@ -686,7 +1034,7 @@ function buildPopupHtml(group, mapType) {
       : '';
 
     const birth = p.birthday_dbu || 'Ukendt';
-    const stats = `Kampe: ${p.n_matches} | Mål: ${p.n_goals}`;
+    const stats = `Landskampe: ${p.n_matches} | Mål: ${p.n_goals}`;
 
     // Links
     const links = [];

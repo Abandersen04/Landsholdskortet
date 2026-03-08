@@ -901,3 +901,21 @@ html, body {
 .missing-ret-link:hover {
   color: var(--red) !important;
 }
+
+/* Checkbox option (pr. 1000 indbyggere) */
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--gray-600);
+  user-select: none;
+}
+
+.checkbox-option input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--red);
+  cursor: pointer;
+}
