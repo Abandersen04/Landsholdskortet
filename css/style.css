@@ -942,3 +942,51 @@ html, body {
   color: #666;
   font-size: 11px;
 }
+
+/* Info tooltip (Barndomsklub hover) */
+.info-tooltip {
+  position: relative;
+  cursor: default;
+  border-bottom: 1px dashed #999;
+}
+.info-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 400;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 9999;
+}
+.info-tooltip:hover::after {
+  opacity: 1;
+}
+
+/* Sidebar footer – datakilder */
+.sidebar-footer {
+  padding: 12px 0 4px;
+  border-top: 1px solid #e5e5e5;
+  margin-top: 8px;
+}
+.data-sources {
+  font-size: 11px;
+  color: #888;
+  line-height: 1.5;
+  margin: 0;
+}
+.data-sources a {
+  color: #888;
+  text-decoration: underline;
+}
+.data-sources a:hover {
+  color: #C8102E;
+}

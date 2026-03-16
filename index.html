@@ -67,12 +67,12 @@
           <label class="radio-option">
             <input type="radio" name="map_type" value="club" checked>
             <span class="radio-custom"></span>
-            Første klub
+            <span class="info-tooltip" data-tooltip="Spillerens første identificerede klub">Barndomsklub</span>
           </label>
           <label class="radio-option">
             <input type="radio" name="map_type" value="birth">
             <span class="radio-custom"></span>
-            Fødselssteder
+            Fødested
           </label>
           <label class="radio-option">
             <input type="radio" name="map_type" value="all_clubs">
@@ -185,7 +185,9 @@
         <button id="show-missing-btn" class="btn-secondary">Vis spillere med manglende data</button>
       </div>
 
-      <div class="sidebar-footer"></div>
+      <div class="sidebar-footer">
+        <p class="data-sources">Data fra <a href="https://www.dbu.dk" target="_blank" rel="noopener">DBU</a>, <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a>, <a href="https://www.haslund.info/" target="_blank" rel="noopener">haslund.info</a> samt indsendte rettelser og feedback fra fodboldnørder.</p>
+      </div>
     </aside>
 
     <!-- Missing players modal -->
@@ -216,8 +218,8 @@
             <thead>
               <tr>
                 <th data-col="name" class="sortable">Navn ↕</th>
-                <th>Fødselsted</th>
-                <th>Første klub</th>
+                <th>Fødested</th>
+                <th><span class="info-tooltip" data-tooltip="Spillerens første identificerede klub">Barndomsklub</span></th>
                 <th>Wikipedia</th>
                 <th>DBU ID</th>
                 <th data-col="gender" class="sortable">Køn ↕</th>
