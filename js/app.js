@@ -329,8 +329,9 @@ function getFilteredPlayers() {
         const allClubHay = (p.allClubs || []).map(c => stripGender(c.klubnavn || '').toLowerCase()).join(' ');
         if (!matchesSearch(searchTerm, [nameHay, firstClub, allClubHay])) return false;
       } else {
-        // Første klub / Fødested / Region: søg kun i spillernavn + første klub
-        if (!matchesSearch(searchTerm, [nameHay, firstClub])) return false;
+        // Barndomsklub / Fødested / Region: søg i spillernavn + klub + fødested
+        const birthHay = (p.birthPlaceLabel || '').toLowerCase();
+        if (!matchesSearch(searchTerm, [nameHay, firstClub, birthHay])) return false;
       }
     }
 
