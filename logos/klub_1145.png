@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="/Css/error404.min.css" rel="stylesheet" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Siden findes ikke - DBU 404</title>
+    <link rel="apple-touch-icon" sizes="144x144" href="/Content/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/Content/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/Content/favicon/favicon-16x16.png">
+    <link rel="mask-icon" href="/Content/favicon/safari-pinned-tab.svg" color="#cd151d">
+    <link rel="shortcut icon" href="/Content/favicon/favicon.ico">
+    <!--<link rel="apple-touch-icon" sizes="144x144" href="/Content/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/Content/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/Content/favicon/favicon-16x16.png">
+    <link rel="mask-icon" href="/Content/favicon/safari-pinned-tab.svg" color="#cd151d">
+    <link rel="shortcut icon" href="/Content/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="/Content/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#cd151d">-->
+
+</head>
+<body>
+    <div class="header">
+        <div>
+            <img src="/Content/Gfx/dbu_logo.svg" />
+            <div id="logotext" class="header-text">DBU Jylland</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="errortext">
+            <h2>Øv! Siden kan ikke vises</h2>
+            <p>Søger du en stilling, resultat, kampprogram eller lignende kan du med fordel <a id="href" href="" title="DBU">gå til forsiden</a> og søge i turneringer og resultater derfra. Du kan også benytte søgefunktionen i toppen af siden.</p>
+            <br/>
+            <p>Vi kan ikke udelukke, at der er en fejl på siden.<span>Hvis ikke du finder det, du søger, hører vi meget gerne fra dig på </span><a id="mail" href=""></a><span>&nbsp;- så løser vi udfordringen.</span></p>
+            <br />
+            <p><span>Tak for din tålmodighed.</span></p>
+            <p id="name" class="name"></p>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var mail = "mailto:webmaster@dbu.dk";
+    var mailText = "support@dbu.dk";
+    var href = "https://www.dbu.dk/";
+    var logotext = "";
+    var nametext = "DBU";
+    if (window.location.hostname.includes("dbu.dk")) {
+
+        mail = "mailto:webmaster@dbu.dk";
+        mailText = "support@dbu.dk";
+        href = "https://www.dbu.dk/";
+        logotext = "";
+        nametext = "DBU";
+    }
+    if (window.location.hostname.includes("dbujylland.dk")) {
+
+        mail = "mailto:info@dbujylland.dk";
+        mailText = "info@dbujylland.dk";
+        href = "https://www.dbujylland.dk/";
+        logotext = "DBU Jylland";
+        nametext = "DBU Jylland";
+    }
+    if (window.location.hostname.includes("dbusjaelland.dk")) {
+
+        mail = "mailto:mali@dbusjaelland.dk";
+        mailText = "mali@dbusjaelland.dk";
+        href = "https://www.dbusjaelland.dk/";
+        logotext = "DBU Sjælland";
+        nametext = "DBU Sjælland";
+    }
+
+    if (window.location.hostname.includes("dbufyn.dk")) {
+
+        mail = "mailto:info@dbufyn.dk";
+        mailText = "info@dbufyn.dk";
+        href = "https://www.dbufyn.dk/";
+        logotext = "DBU Fyn";
+        nametext = "DBU Fyn";
+    }
+
+    if (window.location.hostname.includes("dbubornholm.dk")) {
+
+        mail = "mailto:info@dbubornholm.dk";
+        mailText = "info@dbubornholm.dk";
+        href = "https://www.dbubornholm.dk/";
+        logotext = "DBU Bornholm";
+        nametext = "DBU Bornholm";
+    }
+    if (window.location.hostname.includes("dbukoebenhavn.dk")) {
+
+        mail = "mailto:info@dbukoebenhavn.dk";
+        mailText = "info@dbukoebenhavn.dk";
+        href = "https://www.dbukoebenhavn.dk/";
+        logotext = "DBU København";
+        nametext = "DBU København";
+    }
+    if (window.location.hostname.includes("dbulolland-falster.dk")) {
+
+        mail = "mailto:info@dbulolland-falster.dk";
+        mailText = "snjn@dbulolland-falster.dk";
+        href = "https://www.dbulolland-falster.dk/";
+        logotext = "DBU Lolland-Falster";
+        nametext = "DBU Lolland-Falster";
+    }
+
+    var a = document.getElementById('href');
+    a.href = href;
+    var b = document.getElementById('mail');
+    b.href = mail;
+    b.innerHTML = mailText;
+    var l = document.getElementById('logotext');
+    l.innerHTML = logotext;
+    var n = document.getElementById('name');
+    n.innerHTML = nametext;
+</script>

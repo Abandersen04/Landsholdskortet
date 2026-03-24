@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="da-dk" dir="ltr">
+<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    
+    <meta name="theme-color" content="#478ac9">
+    <link rel="stylesheet" href="/templates/ulbjergif/css/default.css" media="screen" type="text/css" />
+        <link rel="stylesheet" href="/templates/ulbjergif/css/template.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="/templates/ulbjergif/css/media.css" id="theme-media-css" media="screen" type="text/css" />
+    <link id="u-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <style>
+ .u-header {
+  background-image: none;
+}
+.u-header .u-sheet-1 {
+  min-height: 188px;
+}
+.u-header .u-image-1 {
+  width: 170px;
+  height: 89px;
+  margin: 19px auto 0 0;
+}
+.u-header .u-position-1 {
+  min-height: 49px;
+  height: auto;
+  margin: -79px 0 0 890px;
+}
+.u-header .u-menu-1 {
+  margin: 38px 19px 0 auto;
+}
+.u-header .u-nav-1 {
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.u-header .u-nav-2 {
+  font-size: 1.25rem;
+}
+@media (max-width: 1199px) {
+  .u-header .u-image-1 {
+    margin-top: 7px;
+  }
+  .u-header .u-position-1 {
+    margin-top: -124px;
+    margin-left: 690px;
+  }
+  .u-header .u-menu-1 {
+    width: auto;
+    margin-top: 9px;
+  }
+}
+@media (max-width: 991px) {
+  .u-header .u-image-1 {
+    margin-top: 21px;
+  }
+  .u-header .u-position-1 {
+    margin-left: 470px;
+  }
+  .u-header .u-menu-1 {
+    margin-top: 2px;
+    margin-right: 32px;
+  }
+}
+@media (max-width: 767px) {
+  .u-header .u-image-1 {
+    margin-top: 41px;
+    margin-left: -13px;
+  }
+  .u-header .u-position-1 {
+    margin-top: -104px;
+    margin-left: 290px;
+  }
+  .u-header .u-menu-1 {
+    margin-top: -18px;
+    margin-right: 38px;
+  }
+}
+@media (max-width: 575px) {
+  .u-header .u-image-1 {
+    margin-left: auto;
+  }
+  .u-header .u-position-1 {
+    margin-left: 90px;
+  }
+  .u-header .u-menu-1 {
+    margin-top: 12px;
+    margin-right: 16px;
+  }
+}
+</style>
+<style>
+.u-footer .u-sheet-1 {
+  min-height: 120px;
+}
+.u-footer .u-text-1 {
+  margin: 40px auto 60px;
+}
+.u-footer .u-btn-1 {
+  background-image: none;
+  padding: 0;
+}
+</style>    <script src="/templates/ulbjergif/scripts/jquery.js"></script>
+    <script src="/templates/ulbjergif/scripts/script.js"></script>
+    <style>
+ .u-section-1 {
+  background-image: none;
+}
+.u-section-1 .u-sheet-1 {
+  min-height: 100vh;
+}
+.u-section-1 .u-text-1 {
+  font-size: 12.5rem;
+  font-weight: 700;
+  margin: 60px auto 0;
+}
+.u-section-1 .u-text-2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  margin: 20px auto 0;
+}
+.u-section-1 .u-text-3 {
+  background-image: none;
+  font-size: 1.5rem;
+  width: 525px;
+  margin: 20px auto 0;
+}
+.u-section-1 .u-btn-1 {
+  border-style: solid;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  background-image: none;
+  align-self: center;
+  margin: 30px 0 60px;
+  padding: 10px 54px 10px 52px;
+}
+@media (max-width: 767px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 599px;
+  }
+}
+@media (max-width: 575px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 525px;
+  }
+  .u-section-1 .u-text-1 {
+    font-size: 7.5rem;
+  }
+  .u-section-1 .u-text-2 {
+    font-size: 1.5rem;
+  }
+  .u-section-1 .u-text-3 {
+    font-size: 1.25rem;
+    width: 340px;
+  }
+}
+</style>    
+    
+    
+</head>
+<body class="u-body u-xl-mode">
+
+    <header class="u-clearfix u-header u-sticky u-sticky-7c1f u-white u-header" id="sec-2a1c">
+  <div class="u-clearfix u-sheet u-sheet-1">
+    <img class="custom-expanded u-image u-image-contain u-image-default u-image-1" src="/templates/ulbjergif/images/UIF-fb.png" alt="" data-image-width="1200" data-image-height="628"><!--position-->
+    <div class="hidden-position" style="display:none"></div><!--/position-->
+    	<nav class="u-align-right u-dropdown-icon u-menu u-menu-dropdown u-offcanvas u-menu-1" data-responsive-from="MD">
+      <div class="menu-collapse" style="font-size: 0.875rem; letter-spacing: 0px; font-weight: 500;">
+        <a class="u-button-style u-custom-active-border-color u-custom-active-color u-custom-border u-custom-border-color u-custom-borders u-custom-hover-border-color u-custom-hover-color u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-text-color u-custom-text-hover-color u-custom-top-bottom-menu-spacing u-nav-link u-text-active-grey-90 u-text-grey-40 u-text-hover-grey-70" href="#">
+          <svg class="u-svg-link" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use></svg>
+          <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+</g></svg>
+        </a>
+      </div>
+      <div class="u-custom-menu u-nav-container">
+        <ul class="u-nav u-spacing-2 u-unstyled u-nav-1">
+            <li class="u-nav-item item-387 default current active"><a class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  active" style="padding: 15px 10px;" href="/"><span>Home</span></a></li><li class="u-nav-item item-388 divider deeper parent"><span class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  separator" style="padding: 15px 10px;">Foreningen</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-515"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/kontakt"><span>Kontakt</span></a></li><li class="u-nav-item item-516"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Formaend_upd.feb2024.pdf" target="_blank"><span>Formænd gennem tiden</span></a></li><li class="u-nav-item item-517"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Traenerliste_upd.feb2024_Herrer.pdf" target="_blank"><span>Trænere gennem tiden - herrer</span></a></li><li class="u-nav-item item-518"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Traenerliste_upd.feb2024_Damer.pdf" target="_blank"><span>Trænere gennem tiden - damer</span></a></li><li class="u-nav-item item-531 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Klublotto</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-1723"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/klublotto/klublotto-2026"><span>Klublotto 2026</span></a></li><li class="u-nav-item item-1276"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/klublotto/klublotto-2025"><span>Klublotto 2025</span></a></li><li class="u-nav-item item-708"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/klublotto/klublotto-2024"><span>Klublotto 2024</span></a></li><li class="u-nav-item item-709"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/klublotto/klublotto-2023"><span>Klublotto 2023</span></a></li></ul></div></li><li class="u-nav-item item-694 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Vi har brug for din hjælp!</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-1345"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/vi-har-brug-for-din-hjaelp/hjaelp-til-haervejslobet-2026"><span>Hjælp til Hærvejsløbet 2026</span></a></li></ul></div></li><li class="u-nav-item item-707"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/kontingent"><span>Kontingent</span></a></li><li class="u-nav-item item-742"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/vedtaegter-UIF-2016.pdf" target="_blank"><span>Vedtægter</span></a></li><li class="u-nav-item item-952"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/podcast"><span>Podcast</span></a></li><li class="u-nav-item item-1599"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/tilmelding-til-vinsmagning-2026"><span>Tilmelding til vinsmagning 2026</span></a></li><li class="u-nav-item item-1605"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/fototilladelse"><span>Fototilladelse</span></a></li><li class="u-nav-item item-1770"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/tilmelding-legendernes-dag"><span>Tilmelding Legendernes dag</span></a></li></ul></div></li><li class="u-nav-item item-389 divider deeper parent"><span class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  separator" style="padding: 15px 10px;">Sponsor</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-390"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/sponsorer-i-uif"><span>Sponsorer i UIF</span></a></li><li class="u-nav-item item-391"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/bliv-sponsor-i-uif"><span>Bliv sponsor i UIF</span></a></li><li class="u-nav-item item-392"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Sponsorseddel2026.pdf" target="_blank"><span>Sponsor muligheder</span></a></li><li class="u-nav-item item-393"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/bliv-hjertesponsor"><span>Bliv hjertesponsor</span></a></li><li class="u-nav-item item-394"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Sponsorseddel 2025_Sponsoraftale.pdf" target="_blank"><span>Sponsoraftale</span></a></li><li class="u-nav-item item-811 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Rabat ordning</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-885"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/rabat-ordning/bjorks-terapi-og-velvaere-giver-20-rabat-pa-alle-behandlinger"><span>​Bjørks terapi og velvære giver 20% rabat på alle behandlinger</span></a></li></ul></div></li><li class="u-nav-item item-1279"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Sponsorseddel 2026-reklamebande.pdf" target="_blank"><span>Reklamebande på stadion</span></a></li><li class="u-nav-item item-1280"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/bestil-vin"><span>Bestil Vin</span></a></li></ul></div></li><li class="u-nav-item item-395 divider deeper parent"><span class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  separator" style="padding: 15px 10px;">Børn</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-597"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/bornepolitik.pdf" target="_blank"><span>Børnepolitik</span></a></li><li class="u-nav-item item-675"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/dbus-boernesyn-art-1-13-2020.pdf" target="_blank"><span>DBUs børnesyn</span></a></li><li class="u-nav-item item-676"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbu.dk/boern-og-unge/boernefodbold/strategi-for-dansk-boernefodbold/dbu-s-10-boerneloefter/" target="_blank"><span>10 børneløfter</span></a></li><li class="u-nav-item item-785"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/born/ulbjerg-idraetsforening-dbu-borneklub"><span>Ulbjerg Idrætsforening DBU børneklub</span></a></li><li class="u-nav-item item-851"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://sub88.dk/" target="_blank"><span>SUB 88 ungdomsfodbold</span></a></li></ul></div></li><li class="u-nav-item item-396"><a class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  " style="padding: 15px 10px;" href="/nyheder"><span>Nyheder</span></a></li><li class="u-nav-item item-400 deeper parent"><a class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  " href="https://www.dbujylland.dk/resultater/klub/365/holdoversigt" style="padding: 15px 10px;" target="_blank"><span>Resultater/stillinger</span></a><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-401"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/8045_485564/stilling" target="_blank"><span>Herrer Serie 3 - Forår 2026</span></a></li><li class="u-nav-item item-402"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/8046_485593/stilling" target="_blank"><span>Herrer Serie 4 - Forår 2026</span></a></li><li class="u-nav-item item-786"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/8047_485651/stilling" target="_blank"><span>Herrer Serie 5 - Forår 2026</span></a></li><li class="u-nav-item item-403"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/5371_485722/stilling" target="_blank"><span>Serie 1 Kvinder - Forår 2026</span></a></li><li class="u-nav-item item-433"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/234421_490203/stilling" target="_blank"><span>M+40 A/B 11:11 - Forår 2026</span></a></li><li class="u-nav-item item-1369"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Turnering60+2026.pdf" target="_blank"><span>Turnering 60+ 2026</span></a></li><li class="u-nav-item item-1277"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/760719_477491/stilling" target="_blank"><span>Herre Serie 4 TT</span></a></li></ul></div></li><li class="u-nav-item item-408"><a class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  " style="padding: 15px 10px;" href="/hold-tilmelding"><span>Hold tilmelding</span></a></li><li class="u-nav-item item-1477 divider deeper parent"><span class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  separator" style="padding: 15px 10px;">Øvrig sport</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-409 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Padel tennis</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-410"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/padel-tennis/pay-and-play-sadan-gor-du"><span>Pay and play - sådan gør du</span></a></li><li class="u-nav-item item-411"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.conventus.dk/dataudv/www/online_booking.php?forening=8329&amp;wizard=dvbl&amp;dato=single&amp;varigheder=60;90;120;150;180&amp;bookinger_tid=vaelg_fri_tid&amp;bookinger_opdel=flad&amp;bookinger_kolonner=ressource;pris;antal_pl" target="_blank"><span>Book din bane</span></a></li><li class="u-nav-item item-996"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.conventus.dk/dataudv/www/new_tilmelding.php?foreningsid=8329&amp;gruppe=716933" target="_blank"><span>Opret nyt medlem</span></a></li></ul></div></li><li class="u-nav-item item-412 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Krocket</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-812"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/krocket/ulbjerg-krocketklub"><span>Ulbjerg Krocketklub</span></a></li><li class="u-nav-item item-1424"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/krocket/kringle-krocket-2025"><span>Kringle Krocket 2025</span></a></li></ul></div></li><li class="u-nav-item item-1478"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/motionscenter"><span>Motionscenter</span></a></li><li class="u-nav-item item-1479"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/spinning"><span>Spinning</span></a></li></ul></div></li><li class="u-nav-item item-723 divider deeper parent"><span class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  separator" style="padding: 15px 10px;">Klubhuset</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-20"><li class="u-nav-item item-738"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/klubhuset/kalender"><span>Kalender</span></a></li></ul></div></li><li class="u-nav-item item-871"><a class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  " style="padding: 15px 10px;" href="/sub-09-kvinder"><span>SUB 09 Kvinder</span></a></li><li class="u-nav-item item-1371"><a class="u-active-grey-5 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90  " style="padding: 15px 10px;" href="/shoppen"><span>Shoppen</span></a></li></ul>
+      </div>
+      <div class="u-custom-menu u-nav-container-collapse">
+        <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+          <div class="u-inner-container-layout u-sidenav-overflow">
+            <div class="u-menu-close"></div>
+            <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+            <li class="u-nav-item item-387 default current active"><a class="u-button-style u-nav-link  active" href="/"><span>Home</span></a></li><li class="u-nav-item item-388 divider deeper parent"><span class="u-button-style u-nav-link  separator">Foreningen</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-515"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/kontakt"><span>Kontakt</span></a></li><li class="u-nav-item item-516"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Formaend_upd.feb2024.pdf" target="_blank"><span>Formænd gennem tiden</span></a></li><li class="u-nav-item item-517"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Traenerliste_upd.feb2024_Herrer.pdf" target="_blank"><span>Trænere gennem tiden - herrer</span></a></li><li class="u-nav-item item-518"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Traenerliste_upd.feb2024_Damer.pdf" target="_blank"><span>Trænere gennem tiden - damer</span></a></li><li class="u-nav-item item-531 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Klublotto</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-1723"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/klublotto/klublotto-2026"><span>Klublotto 2026</span></a></li><li class="u-nav-item item-1276"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/klublotto/klublotto-2025"><span>Klublotto 2025</span></a></li><li class="u-nav-item item-708"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/klublotto/klublotto-2024"><span>Klublotto 2024</span></a></li><li class="u-nav-item item-709"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/klublotto/klublotto-2023"><span>Klublotto 2023</span></a></li></ul></div></li><li class="u-nav-item item-694 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Vi har brug for din hjælp!</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-1345"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/vi-har-brug-for-din-hjaelp/hjaelp-til-haervejslobet-2026"><span>Hjælp til Hærvejsløbet 2026</span></a></li></ul></div></li><li class="u-nav-item item-707"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/kontingent"><span>Kontingent</span></a></li><li class="u-nav-item item-742"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/vedtaegter-UIF-2016.pdf" target="_blank"><span>Vedtægter</span></a></li><li class="u-nav-item item-952"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/podcast"><span>Podcast</span></a></li><li class="u-nav-item item-1599"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/tilmelding-til-vinsmagning-2026"><span>Tilmelding til vinsmagning 2026</span></a></li><li class="u-nav-item item-1605"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/fototilladelse"><span>Fototilladelse</span></a></li><li class="u-nav-item item-1770"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/foreningen/tilmelding-legendernes-dag"><span>Tilmelding Legendernes dag</span></a></li></ul></div></li><li class="u-nav-item item-389 divider deeper parent"><span class="u-button-style u-nav-link  separator">Sponsor</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-390"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/sponsorer-i-uif"><span>Sponsorer i UIF</span></a></li><li class="u-nav-item item-391"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/bliv-sponsor-i-uif"><span>Bliv sponsor i UIF</span></a></li><li class="u-nav-item item-392"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Sponsorseddel2026.pdf" target="_blank"><span>Sponsor muligheder</span></a></li><li class="u-nav-item item-393"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/bliv-hjertesponsor"><span>Bliv hjertesponsor</span></a></li><li class="u-nav-item item-394"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Sponsorseddel 2025_Sponsoraftale.pdf" target="_blank"><span>Sponsoraftale</span></a></li><li class="u-nav-item item-811 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Rabat ordning</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-885"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/rabat-ordning/bjorks-terapi-og-velvaere-giver-20-rabat-pa-alle-behandlinger"><span>​Bjørks terapi og velvære giver 20% rabat på alle behandlinger</span></a></li></ul></div></li><li class="u-nav-item item-1279"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Sponsorseddel 2026-reklamebande.pdf" target="_blank"><span>Reklamebande på stadion</span></a></li><li class="u-nav-item item-1280"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/sponsor/bestil-vin"><span>Bestil Vin</span></a></li></ul></div></li><li class="u-nav-item item-395 divider deeper parent"><span class="u-button-style u-nav-link  separator">Børn</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-597"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/bornepolitik.pdf" target="_blank"><span>Børnepolitik</span></a></li><li class="u-nav-item item-675"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/dbus-boernesyn-art-1-13-2020.pdf" target="_blank"><span>DBUs børnesyn</span></a></li><li class="u-nav-item item-676"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbu.dk/boern-og-unge/boernefodbold/strategi-for-dansk-boernefodbold/dbu-s-10-boerneloefter/" target="_blank"><span>10 børneløfter</span></a></li><li class="u-nav-item item-785"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/born/ulbjerg-idraetsforening-dbu-borneklub"><span>Ulbjerg Idrætsforening DBU børneklub</span></a></li><li class="u-nav-item item-851"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://sub88.dk/" target="_blank"><span>SUB 88 ungdomsfodbold</span></a></li></ul></div></li><li class="u-nav-item item-396"><a class="u-button-style u-nav-link  " href="/nyheder"><span>Nyheder</span></a></li><li class="u-nav-item item-400 deeper parent"><a class="u-button-style u-nav-link  " href="https://www.dbujylland.dk/resultater/klub/365/holdoversigt" target="_blank"><span>Resultater/stillinger</span></a><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-401"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/8045_485564/stilling" target="_blank"><span>Herrer Serie 3 - Forår 2026</span></a></li><li class="u-nav-item item-402"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/8046_485593/stilling" target="_blank"><span>Herrer Serie 4 - Forår 2026</span></a></li><li class="u-nav-item item-786"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/8047_485651/stilling" target="_blank"><span>Herrer Serie 5 - Forår 2026</span></a></li><li class="u-nav-item item-403"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/5371_485722/stilling" target="_blank"><span>Serie 1 Kvinder - Forår 2026</span></a></li><li class="u-nav-item item-433"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/234421_490203/stilling" target="_blank"><span>M+40 A/B 11:11 - Forår 2026</span></a></li><li class="u-nav-item item-1369"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/pdf/Turnering60+2026.pdf" target="_blank"><span>Turnering 60+ 2026</span></a></li><li class="u-nav-item item-1277"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.dbujylland.dk/resultater/hold/760719_477491/stilling" target="_blank"><span>Herre Serie 4 TT</span></a></li></ul></div></li><li class="u-nav-item item-408"><a class="u-button-style u-nav-link  " href="/hold-tilmelding"><span>Hold tilmelding</span></a></li><li class="u-nav-item item-1477 divider deeper parent"><span class="u-button-style u-nav-link  separator">Øvrig sport</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-409 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Padel tennis</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-410"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/padel-tennis/pay-and-play-sadan-gor-du"><span>Pay and play - sådan gør du</span></a></li><li class="u-nav-item item-411"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.conventus.dk/dataudv/www/online_booking.php?forening=8329&amp;wizard=dvbl&amp;dato=single&amp;varigheder=60;90;120;150;180&amp;bookinger_tid=vaelg_fri_tid&amp;bookinger_opdel=flad&amp;bookinger_kolonner=ressource;pris;antal_pl" target="_blank"><span>Book din bane</span></a></li><li class="u-nav-item item-996"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="https://www.conventus.dk/dataudv/www/new_tilmelding.php?foreningsid=8329&amp;gruppe=716933" target="_blank"><span>Opret nyt medlem</span></a></li></ul></div></li><li class="u-nav-item item-412 divider deeper parent"><span class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  separator">Krocket</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-812"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/krocket/ulbjerg-krocketklub"><span>Ulbjerg Krocketklub</span></a></li><li class="u-nav-item item-1424"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/krocket/kringle-krocket-2025"><span>Kringle Krocket 2025</span></a></li></ul></div></li><li class="u-nav-item item-1478"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/motionscenter"><span>Motionscenter</span></a></li><li class="u-nav-item item-1479"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/ovrig-sport/spinning"><span>Spinning</span></a></li></ul></div></li><li class="u-nav-item item-723 divider deeper parent"><span class="u-button-style u-nav-link  separator">Klubhuset</span><div class="u-nav-popup"><ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-block-7c1f-22"><li class="u-nav-item item-738"><a class="u-active-black u-button-style u-hover-palette-1-light-1 u-nav-link u-palette-1-base  " href="/klubhuset/kalender"><span>Kalender</span></a></li></ul></div></li><li class="u-nav-item item-871"><a class="u-button-style u-nav-link  " href="/sub-09-kvinder"><span>SUB 09 Kvinder</span></a></li><li class="u-nav-item item-1371"><a class="u-button-style u-nav-link  " href="/shoppen"><span>Shoppen</span></a></li></ul>
+          </div>
+        </div>
+        <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+      </div>
+    </nav>
+  </div>
+</header>
+    
+<section class="u-align-center u-clearfix u-section-1" id="sec-55a8">
+  <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+    <h1 class="u-text u-text-default u-text-1">404</h1>
+    <div class="u-text u-text-default u-text-not-found-message u-text-2">        <div id="errorboxbody">
+            <h2>
+                Desværre! Den forespurgte side kunne ikke findes.            </h2>
+            <h3>Desværre er der opstået en fejl under udførslen af din efterspørgsel!</h3>
+            <p>Grunden til at du ikke kan besøge denne side kan være en af følgende:</p>
+            <ul>
+                <li>et <strong>udløbet bogmærke/favorit</strong></li>
+                <li>en <strong>fejlindtastet adresse</strong></li>
+                <li>en søgemaskine der har en <strong>forældet udgave af dette websted</strong></li>
+                <li>du har <strong>ingen adgang</strong> til denne side</li>
+            </ul>
+                            <div id="searchbox">
+                    <h3 class="unseen">
+                        Search                    </h3>
+                    <p>
+                        Du kan søge på webstedet eller besøge webstedets forside.                    </p>
+                                                        </div><!-- end searchbox -->
+                        <div><!-- start goto home page -->
+                <p>
+                    <a href="/index.php" title="Gå til hjemmesiden">Hjemmeside</a>
+                </p>
+            </div><!-- end goto home page -->
+            <h3>
+                Hvis problement fortsætter, så kontakt venligst webstedsadministratoren og rapporter fejlen nedenunder.            </h3>
+            <h2>
+                #404&nbsp;Side ikke fundet            </h2>
+                        <br />
+        </div>
+        </div>
+    <p class="u-text u-text-3">The page you are looking for was moved, removed, renamed or might never existed</p>
+    <a href="" class="u-active-white u-black u-border-2 u-border-active-black u-border-black u-border-hover-black u-btn u-button-style u-hover-white u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1">Go to homepage</a>
+  </div>
+</section>
+    <footer class="u-clearfix u-footer u-grey-80" id="sec-ad98">
+  <div class="u-clearfix u-sheet u-sheet-1">
+    <p class="u-align-center u-text u-text-default u-text-1"> © Ulbjerg Idrætsforening - ​Stadionvej 6A - 8832 Skals <br>Design <a href="https://sortgrafisk.dk/" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-1" target="_blank">Sort Grafisk</a>
+    </p>
+  </div>
+</footer>
+    
+
+
+
+
+</body>
+</html>
