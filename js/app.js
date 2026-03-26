@@ -1046,9 +1046,7 @@ function buildPopupHtml(group, mapType) {
     if (p.dbuID) {
       links.push(`<a href="https://www.dbu.dk/landshold/landsholdsdatabasen/PlayerInfo/${p.dbuID}" target="_blank" rel="noopener">DBU</a>`);
     }
-    if (p.haslund_url) {
-      links.push(`<a href="${escapeHtml(p.haslund_url)}" target="_blank" rel="noopener">Haslund</a>`);
-    }
+
 
     return `
       <div class="popup-player">
