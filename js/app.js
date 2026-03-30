@@ -260,12 +260,6 @@ async function loadData() {
     longitude: p.longitude ? parseFloat(p.longitude) : null
   }));
 
-  // Opdater Om-modal med antal spillere med antaget fødested
-  const nAssumed = allPlayers.filter(p => p.birthplaceAssumed).length;
-  const omAssumedEl = document.getElementById('om-assumed-text');
-  if (omAssumedEl && nAssumed > 0) {
-    omAssumedEl.textContent = `For ${nAssumed} kvindelige spillere har det ikke været muligt at identificere et fødested. For disse spillere er fødested sat til samme sted som barndomsklubben.`;
-  }
 }
 
 function parseBirthYear(dateStr) {
