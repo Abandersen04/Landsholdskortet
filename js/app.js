@@ -97,17 +97,30 @@ function initControls() {
     });
   });
 
+  // Radio buttons – club_level (klub / kommune / region)
+  document.querySelectorAll('input[name="club_level"]').forEach(el => {
+    el.addEventListener('change', () => {
+      updateBirthSubControls();
+      updateClubPlayersVisibility();
+      updateMap();
+    });
+  });
+
   // Checkbox – pr. 1000 indbyggere
   document.getElementById('per-capita-check').addEventListener('change', () => updateMap());
 
   function updateBirthSubControls() {
     const mapType = document.querySelector('input[name="map_type"]:checked').value;
     const birthLevelGroup = document.getElementById('birth-level-group');
+    const clubLevelGroup = document.getElementById('club-level-group');
     const perCapitaGroup = document.getElementById('per-capita-group');
     birthLevelGroup.style.display = (mapType === 'birth') ? '' : 'none';
+    clubLevelGroup.style.display = (mapType === 'club') ? '' : 'none';
     if (mapType === 'birth') {
       const level = document.querySelector('input[name="birth_level"]:checked').value;
       perCapitaGroup.style.display = (level === 'kommune' || level === 'region') ? '' : 'none';
+    } else {
+      perCapitaGroup.style.display = 'none';
     }
   }
   updateBirthSubControls();
@@ -122,8 +135,9 @@ function initControls() {
     const group = document.getElementById('club-players-group');
     const groupLabel = document.getElementById('club-players-group-label');
     const birthLevel = document.querySelector('input[name="birth_level"]:checked').value;
+    const clubLevel = document.querySelector('input[name="club_level"]:checked').value;
     // Skjul min-spillere ved region/kommune-niveau (giver ikke mening pr. 1000)
-    const showMinPlayers = mapType === 'club' || mapType === 'all_clubs' ||
+    const showMinPlayers = (mapType === 'club' && clubLevel === 'klub') || mapType === 'all_clubs' ||
       (mapType === 'birth' && birthLevel === 'city');
     group.style.display = showMinPlayers ? '' : 'none';
     if (mapType === 'birth') {
@@ -350,6 +364,9 @@ function updateMap() {
   const birthLevel = mapType === 'birth'
     ? document.querySelector('input[name="birth_level"]:checked').value
     : null;
+  const clubLevel = mapType === 'club'
+    ? document.querySelector('input[name="club_level"]:checked').value
+    : null;
   const perCapita = mapType === 'birth' && (birthLevel === 'kommune' || birthLevel === 'region')
     && document.getElementById('per-capita-check').checked;
 
@@ -357,15 +374,19 @@ function updateMap() {
     const searchTerm = document.getElementById('search').value.trim().toLowerCase();
     groups = groupAllClubs(players, searchTerm);
   } else {
-    groups = groupPlayers(players, mapType, birthLevel);
+    groups = groupPlayers(players, mapType, birthLevel, clubLevel);
   }
 
   const pinLabelEl = document.getElementById('count-label');
 
   if (mapType === 'club') {
-    const minCP = parseInt(document.getElementById('min-club-players').value, 10);
-    if (minCP > 1) groups = groups.filter(g => g.players.length >= minCP);
-    pinLabelEl.textContent = 'klubber vist';
+    if (clubLevel === 'klub') {
+      const minCP = parseInt(document.getElementById('min-club-players').value, 10);
+      if (minCP > 1) groups = groups.filter(g => g.players.length >= minCP);
+      pinLabelEl.textContent = 'klubber vist';
+    } else {
+      pinLabelEl.textContent = clubLevel === 'kommune' ? 'kommuner vist' : 'regioner vist';
+    }
   } else if (mapType === 'birth') {
     if (birthLevel === 'city') {
       const minCP = parseInt(document.getElementById('min-club-players').value, 10);
@@ -386,6 +407,12 @@ function updateMap() {
     markersLayer.clearLayers();
     const geoData = birthLevel === 'kommune' ? kommunerGeo : regionerGeo;
     buildChoropleth(groups, geoData, 'navn', perCapita);
+    return;
+  }
+  if (mapType === 'club' && (clubLevel === 'kommune' || clubLevel === 'region')) {
+    markersLayer.clearLayers();
+    const geoData = clubLevel === 'kommune' ? kommunerGeo : regionerGeo;
+    buildChoropleth(groups, geoData, 'navn', false);
     return;
   }
 
@@ -659,6 +686,14 @@ function featureArea(feature) {
   return polys.reduce((sum, poly) => sum + polygonArea(poly[0]), 0);
 }
 
+function findRegion(lat, lon) {
+  if (!lat || !lon || !regionerGeo) return null;
+  for (const feature of regionerGeo.features) {
+    if (pointInFeature(lon, lat, feature)) return feature.properties.navn;
+  }
+  return null;
+}
+
 function findNearestKommune(lat, lon) {
   if (!lat || !lon) return null;
   // 1) Point-in-polygon — pick smallest matching polygon (handles enclaves like Frederiksberg ⊂ København)
@@ -681,7 +716,7 @@ function findNearestKommune(lat, lon) {
   return best;
 }
 
-function groupPlayers(players, mapType, birthLevel) {
+function groupPlayers(players, mapType, birthLevel, clubLevel) {
   const map = new Map();
 
   players.forEach(p => {
@@ -705,6 +740,22 @@ function groupPlayers(players, mapType, birthLevel) {
       lat = center ? center[0] : null;
       lng = center ? center[1] : null;
       locName = p.region;
+    } else if (mapType === 'club' && clubLevel === 'kommune') {
+      const k = findNearestKommune(p.latitude, p.longitude);
+      if (!k || !KOMMUNE_DATA[k]) return;
+      key = k;
+      lat = KOMMUNE_DATA[k].lat;
+      lng = KOMMUNE_DATA[k].lon;
+      locName = k;
+    } else if (mapType === 'club' && clubLevel === 'region') {
+      const r = findRegion(p.latitude, p.longitude);
+      if (!r) return;
+      const center = REGION_CENTERS[r];
+      if (!center) return;
+      key = r;
+      lat = center[0];
+      lng = center[1];
+      locName = r;
     } else {
       const klubKey = p.klubnavn.toUpperCase();
       key = `${klubKey}|${p.latitude}|${p.longitude}`;
@@ -725,10 +776,10 @@ function groupPlayers(players, mapType, birthLevel) {
         klub_dbu_url: p.klub_dbu_url
       };
       // Attach befolkning for kommune/region modes
-      if (mapType === 'birth' && birthLevel === 'kommune' && KOMMUNE_DATA[key]) {
-        entry.befolkning = KOMMUNE_DATA[key].befolkning;
-      } else if (mapType === 'birth' && birthLevel === 'region' && REGION_BEFOLKNING[key]) {
-        entry.befolkning = REGION_BEFOLKNING[key];
+      if ((mapType === 'birth' && birthLevel === 'kommune') || (mapType === 'club' && clubLevel === 'kommune')) {
+        if (KOMMUNE_DATA[key]) entry.befolkning = KOMMUNE_DATA[key].befolkning;
+      } else if ((mapType === 'birth' && birthLevel === 'region') || (mapType === 'club' && clubLevel === 'region')) {
+        if (REGION_BEFOLKNING[key]) entry.befolkning = REGION_BEFOLKNING[key];
       }
       map.set(key, entry);
     }
