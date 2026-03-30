@@ -119,6 +119,9 @@ function initControls() {
     if (mapType === 'birth') {
       const level = document.querySelector('input[name="birth_level"]:checked').value;
       perCapitaGroup.style.display = (level === 'kommune' || level === 'region') ? '' : 'none';
+    } else if (mapType === 'club') {
+      const level = document.querySelector('input[name="club_level"]:checked').value;
+      perCapitaGroup.style.display = (level === 'kommune' || level === 'region') ? '' : 'none';
     } else {
       perCapitaGroup.style.display = 'none';
     }
@@ -367,7 +370,8 @@ function updateMap() {
   const clubLevel = mapType === 'club'
     ? document.querySelector('input[name="club_level"]:checked').value
     : null;
-  const perCapita = mapType === 'birth' && (birthLevel === 'kommune' || birthLevel === 'region')
+  const perCapita = ((mapType === 'birth' && (birthLevel === 'kommune' || birthLevel === 'region')) ||
+    (mapType === 'club' && (clubLevel === 'kommune' || clubLevel === 'region')))
     && document.getElementById('per-capita-check').checked;
 
   if (mapType === 'all_clubs') {
@@ -412,7 +416,7 @@ function updateMap() {
   if (mapType === 'club' && (clubLevel === 'kommune' || clubLevel === 'region')) {
     markersLayer.clearLayers();
     const geoData = clubLevel === 'kommune' ? kommunerGeo : regionerGeo;
-    buildChoropleth(groups, geoData, 'navn', false);
+    buildChoropleth(groups, geoData, 'navn', perCapita);
     return;
   }
 
