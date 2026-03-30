@@ -187,6 +187,7 @@
 
       <div class="sidebar-footer">
         <p class="data-sources">Data fra <a href="https://www.dbu.dk" target="_blank" rel="noopener">DBU</a>, <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a>, <a href="https://www.haslund.info/" target="_blank" rel="noopener">haslund.info</a> samt indsendte rettelser og feedback fra fodboldnørder.</p>
+        <button id="om-btn" class="btn-link">Om kortet</button>
       </div>
     </aside>
 
@@ -229,6 +230,22 @@
             </thead>
             <tbody id="missing-tbody"></tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Om kortet modal -->
+    <div id="om-modal" class="modal-overlay">
+      <div class="modal-content modal-content--narrow">
+        <div class="modal-header">
+          <h2>Om kortet</h2>
+          <button id="om-close" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body om-body">
+          <p>Denne hjemmeside er en hyldest til alle de lokale klubber, hvor det hele begyndte.</p>
+          <p>Kortet viser alle danske A-landsholdsspillere gennem tiderne fordelt på barndomsklub, fødested og øvrige klubber. Det er baseret på DBUs landsholdsdatabase og beriget med oplysninger fra Wikipedia, haslund.info samt feedback og rettelser fra danske fodboldnørder.</p>
+          <p>Ser du en fejl – måske har du et avisudklip, der fortæller noget andet end hvad kortet viser – så er du meget velkommen til at <a href="https://docs.google.com/forms/d/e/1FAIpQLSfihPXtuif_-GwYUC0R-JG7sMlCsVgpl1JfWvsUvqoW3EYMFw/viewform" target="_blank" rel="noopener">indsende en rettelse her</a>.</p>
+          <p>Kortet kan altid blive bedre og mere detaljeret.</p>
         </div>
       </div>
     </div>

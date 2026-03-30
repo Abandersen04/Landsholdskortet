@@ -701,6 +701,50 @@ html, body {
   to { transform: rotate(360deg); }
 }
 
+/* ===== Link-style button ===== */
+.btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--primary);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  margin-top: 6px;
+  display: inline-block;
+}
+
+.btn-link:hover {
+  color: var(--primary-dark, #1a4fa0);
+}
+
+/* ===== Om modal ===== */
+.modal-content--narrow {
+  max-width: 520px;
+}
+
+.om-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.om-body p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--gray-700, #374151);
+  margin: 0;
+}
+
+.om-body a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* ===== Secondary Button ===== */
 .btn-secondary {
   width: 100%;

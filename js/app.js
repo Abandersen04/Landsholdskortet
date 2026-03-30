@@ -1106,6 +1106,14 @@ let missingSortCol = null;
 let missingSortAsc = true;
 
 function initMissingPanel() {
+  // Om kortet modal
+  const omBtn = document.getElementById('om-btn');
+  const omModal = document.getElementById('om-modal');
+  const omClose = document.getElementById('om-close');
+  omBtn.addEventListener('click', () => omModal.classList.add('open'));
+  omClose.addEventListener('click', () => omModal.classList.remove('open'));
+  omModal.addEventListener('click', (e) => { if (e.target === omModal) omModal.classList.remove('open'); });
+
   const btn = document.getElementById('show-missing-btn');
   const modal = document.getElementById('missing-modal');
   const closeBtn = document.getElementById('missing-close');
