@@ -86,24 +86,24 @@ html, body {
 /* ===== Stats Box ===== */
 .stats-box {
   background: var(--red-light);
-  padding: 14px 16px;
+  padding: 8px 12px;
   border-radius: var(--radius);
-  border-left: 4px solid var(--red);
+  border-left: 3px solid var(--red);
   display: flex;
   align-items: baseline;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
 .stats-number {
-  font-size: 28px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--red);
   line-height: 1;
 }
 
 .stats-label {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--gray-500);
   text-transform: uppercase;
   letter-spacing: 0.05em;
