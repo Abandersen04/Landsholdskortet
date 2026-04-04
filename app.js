@@ -342,7 +342,7 @@ function groupPlayers(players, mapType) {
       key = `${klubKey}|${p.latitude}|${p.longitude}`;
       lat = p.latitude;
       lng = p.longitude;
-      locName = klubKey;
+      locName = p.klubnavn;
     }
 
     if (!map.has(key)) {
